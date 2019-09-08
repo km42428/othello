@@ -1,26 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Square from "./components/Square";
+import styled from "styled-components";
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const Table = styled.table`
+  margin: 0 auto;
+`;
+class App extends React.Component {
+  render() {
+    const rows = [0, 1, 2, 3, 4, 5, 6, 7];
+    const columns = [0, 1, 2, 3, 4, 5, 6, 7];
+    return (
+      <div className="App">
+        <Table>
+          {rows.map(row => {
+            {
+              return (
+                <tr key={row}>
+                  {columns.map(column => {
+                    {
+                      return (
+                          <Square
+                          key={`${row}_${column}`}
+                            row={row}
+                            column={column}
+                            stone={(row + column) % 3}
+                          />
+                      );
+                    }
+                  })}
+                </tr>
+              );
+            }
+          })}
+        </Table>
+      </div>
+    );
+  }
 }
 
 export default App;
