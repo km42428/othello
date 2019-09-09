@@ -50,7 +50,7 @@ class Board extends React.Component<IProps, IState> {
         return stoneNum;
       });
     });
-    const turn = isChanged ? this.state.turn === 1 ?  2 : 1 : this.state.turn;
+    const turn = isChanged ? this.state.turn === 1 ? 2 : 1 : this.state.turn;
     this.setState({ stones, turn });
     return;
   }

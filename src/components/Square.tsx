@@ -17,10 +17,10 @@ const Container = styled.td`
     background-color: #0f0;
   }
   .stone-black {
-    background-color: #fff;
+    background-color: #000;
   }
   .stone-white {
-    background-color: #000;
+    background-color: #fff;
   }
 `;
 
