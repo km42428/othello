@@ -1,11 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 
-const Container = styled.td`
+interface IContainer {
+  canReturn: boolean;
+}
+
+const Container = styled.td<IContainer>`
   width: 40px;
   height: 40px;
   text-align: center;
-  background-color: #0f0;
+  background-color: ${props => (props.canReturn ? "#0f0" : "#0a0")};
   cursor: pointer;
   .stone {
     width: 40px;
@@ -14,7 +18,7 @@ const Container = styled.td`
     border: 0px;
   }
   .stone-none {
-    background-color: #0f0;
+    background-color: ${props => (props.canReturn ? "#0f0" : "#0a0")};
   }
   .stone-black {
     background-color: #000;
@@ -29,7 +33,13 @@ type IProps = {
   column: number;
   stoneNum: number; // 0: none, 1: black, 2: white
   turn: number;
-  changeStone(row: number, column: number, stoneNum: number):  void | undefined
+  canReturn: boolean;
+  changeStone(
+    row: number,
+    column: number,
+    stoneNum: number,
+    canReturn: boolean
+  ): void;
 };
 
 type IState = {
@@ -38,14 +48,14 @@ type IState = {
   stone: number; // 0: none, 1: black, 2: white
 };
 
-function stoneName (stoneNum: number) {
+function stoneName(stoneNum: number) {
   switch (stoneNum) {
     case 1:
-      return 'black';
+      return "black";
     case 2:
-      return 'white';
+      return "white";
     default:
-      return 'none';
+      return "none";
   }
 }
 
@@ -54,8 +64,15 @@ class Square extends React.Component<IProps, IState> {
   //   super(props);
   // }
   render() {
-    const { row, column, stoneNum, turn } = this.props;
-    return <Container><button className={`stone stone-${stoneName(stoneNum)}`} onClick={() => this.props.changeStone(row, column, turn)}></button></Container>;
+    const { row, column, stoneNum, turn, canReturn } = this.props;
+    return (
+      <Container canReturn={canReturn}>
+        <button
+          className={`stone stone-${stoneName(stoneNum)}`}
+          onClick={() => this.props.changeStone(row, column, turn, canReturn)}
+        ></button>
+      </Container>
+    );
   }
 }
 
