@@ -277,7 +277,21 @@ class Board extends React.Component<IProps, IState> {
     this.setState({ stones, turn, puttableSquares });
     
     if (puttableSquares.length === 0) {
-      alert('試合終了や');
+      let blackNum = 0;
+      let whiteNum = 0;
+      stones.forEach((stoneNums) => {
+        stoneNums.forEach((stoneNum) => {
+          if (stoneNum === 1) {
+            blackNum++;
+            return
+          }
+          if (stoneNum === 2) {
+            whiteNum++;
+            return;
+          }
+        });
+      })
+      alert(`試合終了や\n黒 ${blackNum} - ${whiteNum} 白\nでした`);
       return;
     }
     return;
