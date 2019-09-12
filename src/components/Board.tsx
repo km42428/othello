@@ -4,9 +4,17 @@ import Square from "./Square";
 
 const Table = styled.table`
   margin: 0 auto;
+  width: 100%;
+  height: 90%;
 `;
 
-type IProps = {};
+type IProps = {
+  turn: number,
+  stones: number[][];
+  puttableSquares: number[][];
+  lastSquare: number[];
+  updateState(turn: number, stones: number[][], puttableSquares: number[][], lastSquare: number[]): void;
+};
 
 type IState = {
   turn: number,
@@ -14,26 +22,7 @@ type IState = {
   puttableSquares: number[][]
 };
 
-const initialState = {
-  turn: 1,
-  stones: [
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 1, 2, 0, 0, 0],
-    [0, 0, 0, 2, 1, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0]
-  ],
-  puttableSquares: [[4,2], [5,3], [2, 4], [3,5]]
-};
-
 class Board extends React.Component<IProps, IState> {
-  constructor(props: IProps) {
-    super(props);
-    this.state = initialState;
-  }
 
   // 周り8箇所について、石を置けるか確認する
   listAroundPuttableSquares(stones: number[][], currentStoneNum: number, row: number, column: number): number[][] {
@@ -267,40 +256,21 @@ class Board extends React.Component<IProps, IState> {
       alert('置けるの黒か白です')
       return;
     }
-    const stones = this.returnAroundPuttableSquares(this.state.stones, currentStoneNum, row, column);
-    let turn = this.state.turn === 1 ? 2 : 1;
+    const stones = this.returnAroundPuttableSquares(this.props.stones, currentStoneNum, row, column);
+    let turn = this.props.turn === 1 ? 2 : 1;
     let puttableSquares = this.listPuttableSquares(stones, turn);
     if (puttableSquares.length === 0) {
-      turn = this.state.turn;
+      turn = this.props.turn;
       puttableSquares = this.listPuttableSquares(stones, turn);
     }
-    this.setState({ stones, turn, puttableSquares });
-    
-    if (puttableSquares.length === 0) {
-      let blackNum = 0;
-      let whiteNum = 0;
-      stones.forEach((stoneNums) => {
-        stoneNums.forEach((stoneNum) => {
-          if (stoneNum === 1) {
-            blackNum++;
-            return
-          }
-          if (stoneNum === 2) {
-            whiteNum++;
-            return;
-          }
-        });
-      })
-      alert(`試合終了や\n黒 ${blackNum} - ${whiteNum} 白\nでした`);
-      return;
-    }
+    this.props.updateState(turn, stones, puttableSquares, [row, column]);
     return;
   }
 
   render() {
     return (
       <Table>
-        {this.state.stones.map((stoneNums, indexRow) => {
+        {this.props.stones.map((stoneNums, indexRow) => {
           return (
             <tr key={indexRow}>
               {stoneNums.map((stoneNum, indexColumn) => {
@@ -310,11 +280,12 @@ class Board extends React.Component<IProps, IState> {
                     row={indexRow}
                     column={indexColumn}
                     stoneNum={stoneNum}
-                    turn={this.state.turn}
-                    canReturn={this.state.puttableSquares.some((square: number[]) => {
+                    turn={this.props.turn}
+                    canReturn={this.props.puttableSquares.some((square: number[]) => {
                       return square[0] === indexRow && square[1] === indexColumn
                     })}
                     changeStone={this.changeStone.bind(this)}
+                    isLastSquare={this.props.lastSquare[0] === indexRow && this.props.lastSquare[1] === indexColumn}
                   />
                 );
               })}

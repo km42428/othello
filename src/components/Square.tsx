@@ -6,16 +6,23 @@ interface IContainer {
 }
 
 const Container = styled.td<IContainer>`
-  width: 40px;
-  height: 40px;
+  width: 12.5%;
+  height: 12.5%;
   text-align: center;
   background-color: ${props => (props.canReturn ? "#0f0" : "#0a0")};
   cursor: pointer;
   .stone {
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
     border: 0px;
+    .last {
+      width: 20%;
+      height: 16%;
+      margin: 0 auto;
+      border: 0px;
+      background-color: #f00;
+    }
   }
   .stone-none {
     background-color: ${props => (props.canReturn ? "#0f0" : "#0a0")};
@@ -34,6 +41,7 @@ type IProps = {
   stoneNum: number; // 0: none, 1: black, 2: white
   turn: number;
   canReturn: boolean;
+  isLastSquare: boolean;
   changeStone(
     row: number,
     column: number,
@@ -42,11 +50,7 @@ type IProps = {
   ): void;
 };
 
-type IState = {
-  row: number;
-  column: number;
-  stone: number; // 0: none, 1: black, 2: white
-};
+type IState = {};
 
 function stoneName(stoneNum: number) {
   switch (stoneNum) {
@@ -70,7 +74,9 @@ class Square extends React.Component<IProps, IState> {
         <button
           className={`stone stone-${stoneName(stoneNum)}`}
           onClick={() => this.props.changeStone(row, column, turn, canReturn)}
-        ></button>
+        >
+          <div className={this.props.isLastSquare ? 'last' : ''} />
+        </button>
       </Container>
     );
   }
